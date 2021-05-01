@@ -1,5 +1,5 @@
 # variables
-ROWS = COLS = 25
+ROWS = COLS = 50
 RELATION = 8.545/16
 WIDTH = int(3595*RELATION)
 
