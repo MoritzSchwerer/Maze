@@ -1,9 +1,9 @@
-from src.algorithms.generators.rndmgenerator import *
 from src.algorithms.generators.backtracker import *
+from src.algorithms.generators.rndmgenerator import Rndmgenerator
 from src.algorithms.solvers.breathfirstsearch import *
 from src.algorithms.solvers.depthfirstsearch import *
-from tile import *
 from src.main.constants import *
+from src.main.tile import Board
 
 pygame.init()
 
@@ -21,12 +21,10 @@ def main():
     # initialize backtracking variables
     print("> initializing variables for backtracking...")
     generator = None
-    generating = True
 
 
     # initialize search
     searcher = None
-    searching = True
 
     # initializing informational variables
     print("> initializing informational variables...")
@@ -87,7 +85,7 @@ def main():
         # backtracking for maze generation
         if generator:
             generator.make_step()
-            moves+=1
+            moves += 1
             if generator.is_done():
                 generator_has_run = True
                 generator = None

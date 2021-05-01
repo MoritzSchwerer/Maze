@@ -1,6 +1,8 @@
 import pygame
-import random
-from constants import *
+
+from src.main.constants import *
+
+
 class Breathfirstsearch():
 
     def __init__(self, board):

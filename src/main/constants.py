@@ -1,7 +1,7 @@
 # variables
-ROWS = COLS = 15
-RELATION = 2/3
-WIDTH = int(2250*RELATION)
+ROWS = COLS = 25
+RELATION = 8.545/16
+WIDTH = int(3595*RELATION)
 
 
 # do not change
