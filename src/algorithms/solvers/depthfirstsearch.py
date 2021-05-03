@@ -6,6 +6,7 @@ from src.main.constants import *
 class Depthfirstsearch():
 
     def __init__(self, board):
+
         self.board = board
         self.tiles = board.get_tiles()
         self.stack = []
@@ -53,7 +54,9 @@ class Depthfirstsearch():
         elif len(self.stack) > 0:
             self.current = self.stack.pop()
 
-        self.current.highlight()
+        self.current.draw()
+        self.current.draw_walls()
+        #self.current.highlight()
 
 
     def is_done(self):

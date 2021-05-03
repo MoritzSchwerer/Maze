@@ -33,6 +33,8 @@ class Breathfirstsearch():
                 tile.make_visited()
                 self.last_added.append(tile)
                 self.queue.append(tile)
+                tile.draw()
+                tile.draw_walls()
 
 
     def is_done(self):

@@ -4,8 +4,11 @@ from src.algorithms.solvers.breathfirstsearch import *
 from src.algorithms.solvers.depthfirstsearch import *
 from src.main.constants import *
 from src.main.tile import Board
+import time
+
 
 pygame.init()
+
 
 WIN = pygame.display.set_mode([WIDTH,HEIGHT])
 
@@ -21,6 +24,7 @@ def main():
     # initialize backtracking variables
     print("> initializing variables for backtracking...")
     generator = None
+    start_time = 0
 
 
     # initialize search
@@ -56,29 +60,59 @@ def main():
     resetsearch_text = small.render('reset search', True, BLACK)
 
 
+    WIN.fill((235,235,235))
+    board.draw_board()
+    board.draw_start_and_end()
+    board.display_path()
+    board.draw_walls()
+
+    pygame.draw.rect(WIN, LBLUE, backtracking_button)
+    pygame.draw.rect(WIN, LBLUE, rndmgeneration_button)
+    pygame.draw.rect(WIN, LBLUE, depthfirstsearch_button)
+    pygame.draw.rect(WIN, LBLUE, breadthfirstsearch_button)
+    pygame.draw.rect(WIN, LBLUE, resetmaze_button)
+    pygame.draw.rect(WIN, LBLUE, newstartandend_button)
+    pygame.draw.rect(WIN, LBLUE, resetsearch_button)
+
+    WIN.blit(backtracking_text, (57,220))
+    WIN.blit(rndmgeneration_text, (45,320))
+    WIN.blit(resetmaze_text, (70,420))
+    WIN.blit(breadthfirstsearch_text, (WIDTH-220,220))
+    WIN.blit(depthfirstsearch_text, (WIDTH-210,320))
+    WIN.blit(newstartandend_text, (WIDTH-190,420))
+    WIN.blit(resetsearch_text, (WIDTH-190,520))
+
+    text = medium.render('Moves: {}'.format(moves), True, BLACK)
+    WIN.blit(text, (35,10))
+    text = medium.render('Checks: {}'.format(checks), True, BLACK)
+    WIN.blit(text, (WIDTH-225,10))
+    text = medium.render('Path length: {}'.format(path_length), True, BLACK)
+    WIN.blit(text, (WIDTH-245,70))
+
+
+    pygame.display.update()
+
     # main loop
     print("> starting main loop...")
     running = True
     generator_has_run = False
-
-
     while running:
 
 
-        WIN.fill((235,235,235))
 
-        board.draw_board()
-        board.draw_start_and_end()
-        board.display_path()
-        board.draw_walls()
+        if generator_has_run:
+            #WIN.fill((235,235,235))
+            #board.draw_board()
+            board.draw_start_and_end()
+            #board.display_path()
+            #board.draw_walls()
 
-        text = medium.render('Moves: {}'.format(moves), True, BLACK)
-        WIN.blit(text, (35,10))
-        text = medium.render('Checks: {}'.format(checks), True, BLACK)
-        WIN.blit(text, (WIDTH-225,10))
-        text = medium.render('Path length: {}'.format(path_length), True, BLACK)
-        WIN.blit(text, (WIDTH-245,70))
-
+            text = medium.render('Moves: {}'.format(moves), True, BLACK)
+            WIN.blit(text, (35,10))
+            text = medium.render('Checks: {}'.format(checks), True, BLACK)
+            WIN.blit(text, (WIDTH-225,10))
+            text = medium.render('Path length: {}'.format(path_length), True, BLACK)
+            WIN.blit(text, (WIDTH-245,70))
 
 
 
@@ -89,8 +123,11 @@ def main():
             if generator.is_done():
                 generator_has_run = True
                 generator = None
+                print(time.time()-start_time)
                 # init searching algorithm
                 board.make_everything_unvisited()
+                board.draw_board()
+                board.draw_walls()
 
 
         elif searcher:
@@ -117,6 +154,7 @@ def main():
                     print("> backtracking enabled")
                     moves = 0
                     generator = Backtracker(board)
+                    start_time = time.time()
 
                 if not generator and rndmgeneration_button.collidepoint(mouse_pos):
                     print("> rndmgeneration enabled")
@@ -151,6 +189,8 @@ def main():
                 if not generator and resetsearch_button.collidepoint(mouse_pos):
                     print("> reseting search")
                     board.make_everything_unvisited()
+                    board.draw_board()
+                    board.draw_walls()
                     board.path = []
                     searcher = None
 
@@ -166,23 +206,7 @@ def main():
                 main()
                 running = False
 
-        pygame.draw.rect(WIN, LBLUE, backtracking_button)
-        pygame.draw.rect(WIN, LBLUE, rndmgeneration_button)
-        pygame.draw.rect(WIN, LBLUE, depthfirstsearch_button)
-        pygame.draw.rect(WIN, LBLUE, breadthfirstsearch_button)
-        pygame.draw.rect(WIN, LBLUE, resetmaze_button)
-        pygame.draw.rect(WIN, LBLUE, newstartandend_button)
-        pygame.draw.rect(WIN, LBLUE, resetsearch_button)
 
-        WIN.blit(backtracking_text, (57,220))
-        WIN.blit(rndmgeneration_text, (45,320))
-        WIN.blit(resetmaze_text, (70,420))
-        WIN.blit(breadthfirstsearch_text, (WIDTH-220,220))
-        WIN.blit(depthfirstsearch_text, (WIDTH-210,320))
-        WIN.blit(newstartandend_text, (WIDTH-190,420))
-        WIN.blit(resetsearch_text, (WIDTH-190,520))
-
-        pygame.display.flip()
         pygame.display.update()
 
 

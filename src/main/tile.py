@@ -4,7 +4,7 @@ from src.main.constants import *
 class Tile:
 
 
-    def __init__ (self, x, y):
+    def __init__ (self, x, y, WIN):
 
         self.color = TILECOLOR
         self.top_wall = True
@@ -17,6 +17,7 @@ class Tile:
         self.y = y * TILESIZE
         self.xInList = x
         self.yInList = y
+        self.win = WIN
 
 
     def get_neighbours(self, tiles):
@@ -143,27 +144,27 @@ class Tile:
         return self.is_end
 
 
-    def draw(self, WIN):
-        pygame.draw.rect(WIN, self.color, (self.x, self.y, TILESIZE, TILESIZE))
+    def draw(self):
+        pygame.draw.rect(self.win, self.color, (self.x, self.y, TILESIZE, TILESIZE))
 
 
-    def draw_walls(self, WIN):
+    def draw_walls(self):
         if self.top_wall:
-            pygame.draw.line(WIN, WALLCOLOR, (self.x, self.y), (self.x + TILESIZE, self.y), width=2)
+            pygame.draw.line(self.win, WALLCOLOR, (self.x, self.y), (self.x + TILESIZE, self.y), width=WALL_WIDTH)
         if self.right_wall:
-            pygame.draw.line(WIN, WALLCOLOR, (self.x + TILESIZE, self.y), (self.x + TILESIZE, self.y + TILESIZE), width=2)
+            pygame.draw.line(self.win, WALLCOLOR, (self.x + TILESIZE, self.y), (self.x + TILESIZE, self.y + TILESIZE), width=WALL_WIDTH)
         if self.bottom_wall:
-            pygame.draw.line(WIN, WALLCOLOR, (self.x, self.y + TILESIZE), (self.x + TILESIZE, self.y + TILESIZE), width=2)
+            pygame.draw.line(self.win, WALLCOLOR, (self.x, self.y + TILESIZE), (self.x + TILESIZE, self.y + TILESIZE), width=WALL_WIDTH)
         if self.left_wall:
-            pygame.draw.line(WIN, WALLCOLOR, (self.x, self.y), (self.x, self.y + TILESIZE), width=2)
+            pygame.draw.line(self.win, WALLCOLOR, (self.x, self.y), (self.x, self.y + TILESIZE), width=WALL_WIDTH)
 
 
 class Board:
 
 
     def __init__(self, WIN):
-        self.tiles = self.initialize_tiles()
         self.WIN = WIN
+        self.tiles = self.initialize_tiles()
         self.start = None
         self.end = None
         self.path = []
@@ -187,7 +188,7 @@ class Board:
             temp = []
 
             for col in range(COLS):
-                temp.append(Tile(row,col))
+                temp.append(Tile(row,col, self.WIN))
 
             tiles.append(temp)
 
@@ -198,13 +199,13 @@ class Board:
     def draw_board(self):
         for row in self.tiles:
             for tile in row:
-                tile.draw(self.WIN);
+                tile.draw();
 
 
     def draw_walls(self):
         for row in self.tiles:
             for tile in row:
-                tile.draw_walls(self.WIN);
+                tile.draw_walls();
 
 
     def get_tiles(self):
@@ -229,6 +230,11 @@ class Board:
             current.remove_bottom_wall()
             neighbour.remove_top_wall()
 
+        current.draw()
+        current.draw_walls()
+        neighbour.draw()
+        neighbour.draw_walls()
+
 
     def remove_walls_tuples(self, current , neighbour):
         x1,y1 = current
@@ -241,21 +247,37 @@ class Board:
             if x2 >= 0 and x1 < COLS:
                 self.tiles[x1][y1].remove_left_wall()
                 self.tiles[x2][y2].remove_right_wall()
+                self.tiles[x1][y1].draw()
+                self.tiles[x2][y2].draw()
+                self.tiles[x1][y1].draw_walls()
+                self.tiles[x2][y2].draw_walls()
         # go right
         elif x == -1:
             if x2 < COLS and x1 >= 0:
                 self.tiles[x1][y1].remove_right_wall()
                 self.tiles[x2][y2].remove_left_wall()
+                self.tiles[x1][y1].draw()
+                self.tiles[x2][y2].draw()
+                self.tiles[x1][y1].draw_walls()
+                self.tiles[x2][y2].draw_walls()
         # go up
         if y == 1:
             if y2 >= 0 and y1 < COLS:
                 self.tiles[x1][y1].remove_top_wall()
                 self.tiles[x2][y2].remove_bottom_wall()
+                self.tiles[x1][y1].draw()
+                self.tiles[x2][y2].draw()
+                self.tiles[x1][y1].draw_walls()
+                self.tiles[x2][y2].draw_walls()
         # go down
         elif y == -1:
             if y2 < COLS and y1 >= 0:
                 self.tiles[x1][y1].remove_bottom_wall()
                 self.tiles[x2][y2].remove_top_wall()
+                self.tiles[x1][y1].draw()
+                self.tiles[x2][y2].draw()
+                self.tiles[x1][y1].draw_walls()
+                self.tiles[x2][y2].draw_walls()
 
 
     def make_everything_unvisited(self):

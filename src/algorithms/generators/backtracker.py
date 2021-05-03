@@ -19,7 +19,7 @@ class Backtracker(Generator):
         self.current.make_visited()
 
         neighbour = self.current.choose_next(self.board.get_tiles())
-        if not neighbour == None:
+        if neighbour:
             neighbour.make_visited()
 
             self.stack.append(self.current)
@@ -31,7 +31,6 @@ class Backtracker(Generator):
             self.current = self.stack.pop()
 
         self.current.highlight()
-
 
     def is_done(self):
         return len(self.current.get_neighbours(self.board.get_tiles())) == 0 and len(self.stack) == 0
